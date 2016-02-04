@@ -1,0 +1,9 @@
+{
+  "name": "ngl.file",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "./src/file.js",
+  "dependencies": {
+    "ngl.core": "*"
+  }
+}
