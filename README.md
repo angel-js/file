@@ -1,5 +1,5 @@
-angel.file
-==========
+ngl.file
+========
 
 File utils for angel / angular 1.x
 
