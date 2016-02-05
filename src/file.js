@@ -3,15 +3,21 @@ angular.module('ngl.file', [])
 .factory('nglFileRead', function ($window, $q) {
     'use strict';
 
-    var read = function (file) {
+    var TYPE_METHOD = {
+      binary: 'readAsDataURL',
+      text: 'readAsText'
+    };
+
+    var read = function (file, type) {
         var deferred = $q.defer();
+        var method = TYPE_METHOD[type || 'binary'];
         var reader = new $window.FileReader();
 
         reader.onload = function (event) {
             deferred.resolve(event.target.result);
         };
 
-        reader.readAsDataURL(file);
+        reader[method](file);
         return deferred.promise;
     };
 

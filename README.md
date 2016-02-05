@@ -14,11 +14,12 @@ API
 ### `nglFileRead`
 
 ```js
-nglFileRead(file).then(function (content) { ... });
+nglFileRead(file, type).then(function (content) { ... });
 ```
 
   * **file:** a file from an `input[type="file"]`
-  * **content:** the file content URL-encoded
+  * **type:** file type: `[ 'binary' | 'text' ]`. Defaults to `binary`
+  * **content:** the file content
 
 ### `nglFileReadImage`
 
