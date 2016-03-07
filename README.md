@@ -48,6 +48,8 @@ References
 
 ### `<ngl-file-on-change>`
 
+Opens a file selection dialog and calls `callback` passing the selected files
+
 Low-level wrapper to `input[type=file].addEventListener('change')`
 
   * must be placed on `input[type=file]` elements only
@@ -66,6 +68,8 @@ References
   * http://stackoverflow.com/a/19647381/1815446
 
 ### `<ngl-file-dialog>`
+
+Opens a file selection dialog and calls `callback` passing the selected files
 
 Higher-level abstraction to `input[type=file]` elements
 
