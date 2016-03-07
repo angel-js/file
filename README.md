@@ -1,7 +1,7 @@
 ngl.file
 ========
 
-File utils for angel / angular 1.x
+Angular 1.x file utils
 
 Install
 -------
