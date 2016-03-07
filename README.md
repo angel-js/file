@@ -14,21 +14,31 @@ API
 ### `nglFileRead`
 
 ```js
-nglFileRead(file, type).then(function (content) { ... });
+nglFileRead(file, type)
+.then(function (content) { ... });
 ```
 
   * **file:** a file from an `input[type="file"]`
   * **type:** file type: `[ 'binary' | 'text' ]`. Defaults to `binary`
   * **content:** the file content
 
-### `nglFileReadImage`
+### `nglFileImage`
 
 ```js
-nglFileReadImage(file).then(function (image) { ... });
+nglFileImage(content)
+.then(function (image) { ... });
 ```
 
-  * **file:** a file from an `input[type="file"]`
-  * **image** a `new window.Image()` instance
+  * **content:** the image content `URL`-encoded
+  * **image:** a `new window.Image()` instance
+
+Works well with `nglFileRead`
+
+```js
+nglFileRead(file)
+.then(nglFileImage)
+.then(function (image) { ... });
+```
 
 References
 
@@ -36,7 +46,7 @@ References
   * http://renevier.net/misc/resizeimg.html
   * https://gist.github.com/pfraces/04889c82006f77864a4a
 
-### `<ngl-file-on-change>`
+### `<ngl-file-dialog>`
 
 Simple wrapper to `input[type=file].addEventListener('change')`
 
@@ -44,7 +54,7 @@ Simple wrapper to `input[type=file].addEventListener('change')`
   * doesn't emit event when selecting the same file multiple times in a row
 
 ```html
-<input type="file" ngl-file-on-change="handleFileChange" />
+<input type="file" ngl-file-dialog="handleFileChange" />
 ```
 
 ```js
@@ -55,7 +65,7 @@ References
 
   * http://stackoverflow.com/a/19647381/1815446
 
-### `<ngl-file-on-select>`
+### `<ngl-file-select>`
 
 Higher-level abstraction to `input[type=file]` elements
 
@@ -64,7 +74,7 @@ Higher-level abstraction to `input[type=file]` elements
   * allow selecting the same file multiple times in a row
 
 ```html
-<button ngl-file-on-select="handleFileSelect">Select</button>
+<button ngl-file-select="handleFileSelect">Select</button>
 ```
 
 ```js
@@ -78,7 +88,7 @@ References
 ### `<ngl-file-write>`
 
 ```html
-<div ngl-file-write="lorem.txt" ngl-file-content="{{ content }}"></div>
+<div ngl-file-write="{{ content }}" ngl-file-name="lorem.txt"></div>
 ```
 
 ```js

@@ -1,7 +1,10 @@
 angular.module('ngl.file', [])
 
-.factory('nglFileRead', function ($window, $q) {
+.factory('nglFileRead', function ($injector) {
     'use strict';
+
+    var $window = $injector.get('$window');
+    var $q = $injector.get('$q');
 
     var TYPE_METHOD = {
       binary: 'readAsDataURL',
@@ -24,49 +27,59 @@ angular.module('ngl.file', [])
     return read;
 })
 
-.factory('nglFileReadImage', function ($window, $q, nglFileRead) {
+.factory('nglFileImage', function ($injector) {
     'use strict';
 
-    var readImage = function (file) {
+    var $window = $injector.get('$window');
+    var $q = $injector.get('$q');
+
+    var createImage = function (content) {
         var deferred = $q.defer();
         var image = new $window.Image();
 
-        image.onload = function () { deferred.resolve(image); };
-        image.onerror = function () { deferred.reject(file); };
+        image.onload = function () {
+          deferred.resolve(image);
+        };
 
-        nglFileRead(file)
-        .then(function (content) { image.src = content; })
-        ['catch'](image.onerror);
+        image.onerror = function () {
+          deferred.reject(content);
+        };
 
+        image.src = content;
         return deferred.promise;
     };
 
-    return readImage;
+    return createImage;
 })
 
-.directive('nglFileOnChange', function ($parse) {
+.directive('nglFileDialog', function ($injector) {
     'use strict';
 
-    var link = function (scope, element, attr) {
-        var callback = $parse(attr.nglFileOnChange)(scope);
+    var $parse = $injector.get('$parse');
 
-        element.on('change', function (event) {
+    var controller = function ($scope, $element, $attrs) {
+        var callback = $parse($attrs.nglFileDialog)($scope);
+
+        $element.on('change', function (event) {
             var files = event.target.files;
             if (!files.length) { return; }
-            
-            scope.$apply(function () {
-                callback(files);
+
+            $scope.$apply(function () {
+              callback(files);
             });
         });
     };
 
     return {
-        link: link
+        scope: true,
+        controller: controller
     };
 })
 
-.directive('nglFileOnSelect', function ($parse) {
+.directive('nglFileSelect', function ($injector) {
     'use strict';
+
+    var $parse = $injector.get('$parse');
 
     var tpl = [
         '<form>',
@@ -74,53 +87,69 @@ angular.module('ngl.file', [])
         '</form>'
     ].join('');
 
-    var link = function (scope, element, attr) {
-        var form = angular.element(tpl);
-        var input = form.children('input');
-        var callback = $parse(attr.nglFileOnSelect)(scope);
+    var form = angular.element(tpl);
+    var input = form.children('input');
+
+    var controller = function ($scope, $element, $attrs) {
+        var onSelectHandler = $parse($attrs.nglFileSelect)($scope);
 
         input.on('change', function (event) {
             var files = event.target.files;
             if (!files.length) { return; }
-            
-            scope.$apply(function () {
-                callback(files);
+
+            $scope.$apply(function () {
+              onSelectHandler(files);
             });
         });
 
-        element.on('click', function () {
+        $element.on('click', function () {
             form[0].reset();
             input[0].click();
         });
     };
 
     return {
-        link: link
+        scope: true,
+        controller: controller
     };
 })
 
-.directive('nglFileWrite', function ($window, $document) {
+.directive('nglFileWrite', function ($injector) {
     'use strict';
-    
-    var tpl = [
-        '<a href="" download="">Download File</a>'
-    ].join('');
+
+    var $window = $injector.get('$window');
+    var $document = $injector.get('$document');
 
     var jsonUrl = function (json) {
         var url = $window.encodeURIComponent(json);
         return 'data:text/json;charset=utf8,' + url;
     };
 
-    var link = function (scope, element, attrs) {
-        var form = angular.element(tpl);
-        var anchor = form.children('a');
-        
-        attrs.$observe('nglFileWrite', function (filename) { anchor.attr({ download: filename }); });
-        attrs.$observe('nglFileContent', function (content) { anchor.attr({ href: jsonUrl(content) }); });
-        element.on('click', function () { anchor[0].click(); });
+    var DEFAULT_FILE_NAME = 'data';
+
+    var tpl = [
+        '<a href="" download="">Download File</a>'
+    ].join('');
+
+    var anchor = angular.element(tpl);
+    anchor.attr({ download: DEFAULT_FILE_NAME });
+
+    var controller = function ($element, $attrs) {
+        $attrs.$observe('nglFileWrite', function (content) {
+          anchor.attr({ href: jsonUrl(content) });
+        });
+
+        $attrs.$observe('nglFileName', function (name) {
+          anchor.attr({ download: name });
+        });
+
+        $element.on('click', function () {
+          anchor[0].click();
+        });
     };
 
     return {
-        link: link
+        scope: true,
+        controller: controller
     };
 });
