@@ -87,6 +87,8 @@ References
 
 ### `<ngl-file-write>`
 
+Stores **JSON** as a file download
+
 ```html
 <div ngl-file-write="{{ content }}" ngl-file-name="lorem.txt"></div>
 ```
