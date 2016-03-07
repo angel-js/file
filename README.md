@@ -46,26 +46,26 @@ References
   * http://renevier.net/misc/resizeimg.html
   * https://gist.github.com/pfraces/04889c82006f77864a4a
 
-### `<ngl-file-dialog>`
+### `<ngl-file-on-change>`
 
-Simple wrapper to `input[type=file].addEventListener('change')`
+Low-level wrapper to `input[type=file].addEventListener('change')`
 
   * must be placed on `input[type=file]` elements only
   * doesn't emit event when selecting the same file multiple times in a row
 
 ```html
-<input type="file" ngl-file-dialog="handleFileChange" />
+<input type="file" ngl-file-on-change="callback" />
 ```
 
 ```js
-$scope.handleFileChange = function (files) { ... };
+$scope.callback = function (files) { ... };
 ```
 
 References
 
   * http://stackoverflow.com/a/19647381/1815446
 
-### `<ngl-file-select>`
+### `<ngl-file-dialog>`
 
 Higher-level abstraction to `input[type=file]` elements
 
@@ -74,11 +74,11 @@ Higher-level abstraction to `input[type=file]` elements
   * allow selecting the same file multiple times in a row
 
 ```html
-<button ngl-file-select="handleFileSelect">Select</button>
+<button ngl-file-dialog="callback">Select</button>
 ```
 
 ```js
-$scope.handleFileSelect = function (files) { ... }
+$scope.callback = function (files) { ... }
 ```
 
 References

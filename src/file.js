@@ -11,7 +11,7 @@ angular.module('ngl.file', [])
       text: 'readAsText'
     };
 
-    var read = function (file, type) {
+    var nglFileRead = function (file, type) {
         var deferred = $q.defer();
         var method = TYPE_METHOD[type || 'binary'];
         var reader = new $window.FileReader();
@@ -24,7 +24,7 @@ angular.module('ngl.file', [])
         return deferred.promise;
     };
 
-    return read;
+    return nglFileRead;
 })
 
 .factory('nglFileImage', function ($injector) {
@@ -33,7 +33,7 @@ angular.module('ngl.file', [])
     var $window = $injector.get('$window');
     var $q = $injector.get('$q');
 
-    var createImage = function (content) {
+    var nglFileImage = function (content) {
         var deferred = $q.defer();
         var image = new $window.Image();
 
@@ -49,16 +49,16 @@ angular.module('ngl.file', [])
         return deferred.promise;
     };
 
-    return createImage;
+    return nglFileImage;
 })
 
-.directive('nglFileDialog', function ($injector) {
+.directive('nglFileOnChange', function ($injector) {
     'use strict';
 
     var $parse = $injector.get('$parse');
 
     var controller = function ($scope, $element, $attrs) {
-        var callback = $parse($attrs.nglFileDialog)($scope);
+        var callback = $parse($attrs.nglFileOnChange)($scope);
 
         $element.on('change', function (event) {
             var files = event.target.files;
@@ -76,7 +76,7 @@ angular.module('ngl.file', [])
     };
 })
 
-.directive('nglFileSelect', function ($injector) {
+.directive('nglFileDialog', function ($injector) {
     'use strict';
 
     var $parse = $injector.get('$parse');
@@ -91,14 +91,14 @@ angular.module('ngl.file', [])
     var input = form.children('input');
 
     var controller = function ($scope, $element, $attrs) {
-        var onSelectHandler = $parse($attrs.nglFileSelect)($scope);
+        var callback = $parse($attrs.nglFileDialog)($scope);
 
         input.on('change', function (event) {
             var files = event.target.files;
             if (!files.length) { return; }
 
             $scope.$apply(function () {
-              onSelectHandler(files);
+              callback(files);
             });
         });
 
