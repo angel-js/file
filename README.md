@@ -71,7 +71,7 @@ References
 
 Opens a file selection dialog and calls `callback` passing the selected files
 
-Higher-level abstraction to `input[type=file]` elements
+High-level abstraction to `input[type=file]` elements
 
   * can't be placed on `input[type]` elements
   * listen to `click` events
